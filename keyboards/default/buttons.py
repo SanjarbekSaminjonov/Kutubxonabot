@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from  loader  import bot, base
+from loader import bot, base
 
 start_buttons = ReplyKeyboardMarkup(
     keyboard=[
@@ -36,12 +36,13 @@ majmua_buttons = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-def baza_tugma(yozuvchilar: list[str]):
+
+def baza_tugma(yozuvchilar):
     index, i = 0, 0
     keys = []
     for yozuvchi in yozuvchilar:
         yozuvchi_nomi = yozuvchi[1]
-        if i%2 == 0 and i != 0:
+        if i % 2 == 0 and i != 0:
             index += 1
 
         if i % 2 == 0:
@@ -49,10 +50,11 @@ def baza_tugma(yozuvchilar: list[str]):
         else:
             keys[index].append(KeyboardButton(text=f'{yozuvchi_nomi}'))
         i += 1
-    
+
     keys.append([KeyboardButton(text='🔙Ortga')])
     return ReplyKeyboardMarkup(keyboard=keys, resize_keyboard=True)
-    
+
+
 # UZBEK ADABIYOTI
 uzbek_yozuvchilar = base.select_all_uzbek()
 uzbek_buttons = baza_tugma(uzbek_yozuvchilar)
@@ -63,7 +65,7 @@ jahon_buttons = baza_tugma(jahon_yozuvchilar)
 
 # KUTUBXONA MANZILLARI
 joylashuv_buttons = ReplyKeyboardMarkup(
-    keyboard = [
+    keyboard=[
         [
             KeyboardButton(text='📍Joylashuv', request_location=True)
         ],
@@ -76,7 +78,7 @@ joylashuv_buttons = ReplyKeyboardMarkup(
 
 # MUROJAAT BUTTONS
 murojaat_buttons = ReplyKeyboardMarkup(
-    keyboard= [
+    keyboard=[
         [
             KeyboardButton(text="Murojaat yo'llash")
         ],
