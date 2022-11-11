@@ -15,10 +15,16 @@ async def bot_start(message: types.Message):
     await message.answer(text="Yozuvchini tanlang: ", reply_markup=uzbek_buttons)
 
 uzbek_yozuvchilar = base.select_all_uzbek()
+print('*'*10)
+print(f'uzbek_yozuvchilari: {uzbek_yozuvchilar}')
+print('*'*10)
 for uzbek_yozuvchi in uzbek_yozuvchilar: 
     @dp.message_handler(text=f'{uzbek_yozuvchi[1]}')
     async def bot_univer(message: types.Message):
         uzbek_yozuvchi = message.text
+        print('*'*10)
+        print(uzbek_yozuvchi)
+        print('*'*10)
         kitoblar = base.select_uzbek(nomi=uzbek_yozuvchi)[2]
         kitob_items = kitoblar.split(',')
         user_id = message.from_user.id
@@ -27,7 +33,7 @@ for uzbek_yozuvchi in uzbek_yozuvchilar:
             manzil = f"{kitob_item.strip()}"
             print(manzil)
             caption = f"Muallif: <b>{uzbek_yozuvchi}</b>\n\n👉🏻@asadbek_muxtorov"
-            await bot.send_document(chat_id=user_id, document=manzil,caption=caption, reply_markup=share_buttons)
+            await bot.send_document(chat_id=user_id, document=manzil,caption=caption, reply_markup=share_buttons(manzil))
 
 
 @dp.message_handler(text="Jahon adabiyoti")

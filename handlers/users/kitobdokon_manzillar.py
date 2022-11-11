@@ -3,9 +3,10 @@ from keyboards.default.buttons import start_buttons, uzbek_buttons, majmua_butto
 from states.holatlar import Holatlar
 from aiogram.dispatcher import FSMContext
 from loader import dp, bot, base
+from data import config
+from keyboards.inline.inline_buttons import alohida_inline
 import math
 import time
-from keyboards.inline.inline_buttons import alohida_inline
 
 
 import googlemaps
@@ -30,7 +31,7 @@ def miles_to_meter(miles):
         return 0
 
 def aniqla(lat, lng):
-    API_KEY = "AIzaSyDzbHf9qczQNzRkkVy4rZmiYb3h4urNGbE"#open('API_KEY.txt', 'r').read()
+    API_KEY = open('API_KEY.txt', 'r').read()
     map_client = googlemaps.Client(API_KEY)
     location = (float(lat), float(lng))
     search_string = 'kitob do\'koni'
@@ -84,20 +85,22 @@ async def loaction(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     
     kutubxona_items = aniqla(user_location_lat, user_location_lng)
+    print('*'*1000)
+    print(kutubxona_items)
     await bot.send_message(chat_id=user_id, text='<b>🍳Atrofdagi manzillar qidirilmoqda...</b>')
     await bot.send_message(chat_id=user_id, text='<b>✅Topildi</b>')
 
     for i in range(len(kutubxona_items)):
         masofa = distance(user_location_lat, user_location_lng, kutubxona_items[i]['lat'], kutubxona_items[i]['lng'])
         data =  f"<b>{i+1}-kitob do\'koni</b>\n\n" \
-                f"Kutubxona nomi: <b>{kutubxona_items[i]['name'].upper()}</b>" \
+                f"Kitob dokon nomi: <b>{kutubxona_items[i]['name'].upper()}</b>" \
                 f"\nFoydalanuvchilar bahosi: <b>{kutubxona_items[i]['user_ratings_total']}</b>" \
                 f"\nMasofa: <b>{masofa}</b>" \
                 f"\n\nDasturchi: @asadbek_muxtorov"
         photo_reverense = kutubxona_items[i]['photo_reference']
         url_manzil = f"https://www.google.com/maps/search/?api=1&query={kutubxona_items[i]['lat']}%2C{kutubxona_items[i]['lng']}&query_place_id={kutubxona_items[i]['place_id']}"
         if photo_reverense is not None:
-            photo_link = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference={photo_reverense}&key=AIzaSyDzbHf9qczQNzRkkVy4rZmiYb3h4urNGbE'
+            photo_link = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference={photo_reverense}&key={config.API_KEY}'
 
         else:
             photo_link = 'https://t.me/Muxtorov_3Dimage/100'

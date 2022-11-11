@@ -1,13 +1,12 @@
-from operator import index
-import re
 from aiogram import types
 from keyboards.default.buttons import start_buttons, uzbek_buttons, majmua_buttons, jahon_buttons, joylashuv_buttons
 from states.holatlar import Holatlar
 from aiogram.dispatcher import FSMContext
 from loader import dp, bot, base
+from data import config
+from keyboards.inline.inline_buttons import alohida_inline
 import math
 import time
-from keyboards.inline.inline_buttons import alohida_inline
 
 
 import googlemaps
@@ -32,7 +31,7 @@ def miles_to_meter(miles):
         return 0
 
 def aniqla(lat, lng):
-    API_KEY = "AIzaSyDzbHf9qczQNzRkkVy4rZmiYb3h4urNGbE"#open('API_KEY.txt', 'r').read()
+    API_KEY = config.API_KEY
     map_client = googlemaps.Client(API_KEY)
     location = (float(lat), float(lng))
     search_string = 'kutubxona'
@@ -68,12 +67,12 @@ def aniqla(lat, lng):
     return kutubxona_data 
 
 
-@dp.message_handler(text='❇️Kutubxona manzillari',)
+@dp.message_handler(text="❇️Kutubxona manzillari",)
 async def bot_start(message: types.Message, state: FSMContext):
-    await message.answer(text="<b>Yaxshi. Siz Kutubxona manzillari tanladingiz.</b>\n\nMenga sizning joylashuvingiz kerak: ", reply_markup=joylashuv_buttons)
-    await Holatlar.kutubxona_joylashuv_qabul_qilish_holati.set()
+    await message.answer(text="<b>Yaxshi. Siz kutubxona manzillari tanladingiz.</b>\n\nMenga sizning joylashuvingiz kerak: ", reply_markup=joylashuv_buttons)
+    await Holatlar.kitobdokon_joylashuv_qabul_qilish_holati.set()
 
-@dp.message_handler(state=Holatlar.kutubxona_joylashuv_qabul_qilish_holati,  content_types='location')
+@dp.message_handler(state=Holatlar.kitobdokon_joylashuv_qabul_qilish_holati,  content_types='location')
 async def loaction(message: types.Message, state: FSMContext):
     await state.update_data({
         'latitude': message.location.latitude,
@@ -86,7 +85,9 @@ async def loaction(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     
     kutubxona_items = aniqla(user_location_lat, user_location_lng)
-    await bot.send_message(chat_id=user_id ,text='<b>🍳Atrofdagi manzillar qidirilmoqda...</b>')
+    print('#'*1000)
+    print(kutubxona_items)
+    await bot.send_message(chat_id=user_id, text='<b>🍳Atrofdagi manzillar qidirilmoqda...</b>')
     await bot.send_message(chat_id=user_id, text='<b>✅Topildi</b>')
 
     for i in range(len(kutubxona_items)):
@@ -99,7 +100,7 @@ async def loaction(message: types.Message, state: FSMContext):
         photo_reverense = kutubxona_items[i]['photo_reference']
         url_manzil = f"https://www.google.com/maps/search/?api=1&query={kutubxona_items[i]['lat']}%2C{kutubxona_items[i]['lng']}&query_place_id={kutubxona_items[i]['place_id']}"
         if photo_reverense is not None:
-            photo_link = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference={photo_reverense}&key=AIzaSyDzbHf9qczQNzRkkVy4rZmiYb3h4urNGbE'
+            photo_link = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference={photo_reverense}&key={config.API_KEY}'
 
         else:
             photo_link = 'https://t.me/Muxtorov_3Dimage/100'
@@ -111,7 +112,7 @@ async def loaction(message: types.Message, state: FSMContext):
                         )
         
         if i == len(kutubxona_items) - 1:
-            await bot.send_message(chat_id=user_id, text='<i>🔗Atrofdagi kutubxonalar ro\'yhati bilan tanishdingiz.</i>', reply_markup=start_buttons)
+            await bot.send_message(chat_id=user_id, text='<i>🔗Atrofdagi kitob do\'koni ro\'yhati bilan tanishdingiz.</i>'  )
 
         time.sleep(2)
 

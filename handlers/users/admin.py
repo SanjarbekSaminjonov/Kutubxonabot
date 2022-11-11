@@ -34,12 +34,7 @@ async def bot_echo(message: types.Message):
     
     await bot.send_message(chat_id=user_id, text=text, reply_markup=admin_buttons)
 
-# @dp.message_handler(commands='reklama', chat_id = '1603330179')
-# async def bot_echo(message: types.Message):
-#     user_id = message.from_user.id
 
-#     await bot.send_message(chat_id=user_id, text=f"Foydalanuvchlar soni: {}", reply_markup=start_buttons)
-    
 
 
 

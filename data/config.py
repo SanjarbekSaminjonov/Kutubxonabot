@@ -13,4 +13,5 @@ IP = env.str("ip")  # Xosting ip manzili
 # BOT_TOKEN = str(os.environ.get('BOT_TOKEN'))
 # ADMINS = list(os.environ.get('ADMINS'))
 # IP = str(os.environ.get('ip'))
+API_KEY = open('API_KEY.txt', 'r').read()
 kanallar = ['@sinovuchun4101']

@@ -1,5 +1,3 @@
-from re import U
-import re
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
 
@@ -13,7 +11,7 @@ post_callback = CallbackData("text", 'url_manzil')
 #     ]
 # )
 
-def share_buttons(text, url_manzil):
+def share_buttons(url_manzil):
     share = InlineKeyboardMarkup(
         inline_keyboard= [
             [
